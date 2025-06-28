@@ -1,3 +1,4 @@
+// File: app/src/main/java/com/example/caoquangnhat_2123110077/GameDetailActivity.java
 package com.example.caoquangnhat_2123110077;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,15 +10,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameDetailActivity extends AppCompatActivity implements ImageSliderAdapter.OnImageClickListener {
 
     private ImageView imageViewCover;
+    private Game currentGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,17 +35,62 @@ public class GameDetailActivity extends AppCompatActivity implements ImageSlider
         }
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("GAME_NAME");
-        String price = intent.getStringExtra("GAME_PRICE");
-        String category = intent.getStringExtra("GAME_CATEGORY");
-        String description = intent.getStringExtra("GAME_DESCRIPTION");
-        float rating = intent.getFloatExtra("GAME_RATING", 0f);
-        ArrayList<Integer> imageIds = intent.getIntegerArrayListExtra("GAME_IMAGE_IDS");
+        boolean isOwned = intent.getBooleanExtra("IS_OWNED", false);
 
-        if (name != null) {
-            setTitle(name);
+        if (intent.hasExtra("GAME_OBJECT")) {
+            currentGame = (Game) intent.getSerializableExtra("GAME_OBJECT");
+        } else {
+            // Fallback nếu không có object được truyền qua
+            ArrayList<Integer> imageIds = intent.getIntegerArrayListExtra("GAME_IMAGE_IDS");
+            if (imageIds == null) {
+                imageIds = new ArrayList<>();
+            }
+            // --- CẬP NHẬT LẠI HÀM KHỞI TẠO VỚI THAM SỐ THỨ 7 LÀ NULL ---
+            currentGame = new Game(
+                    intent.getStringExtra("GAME_NAME"),
+                    intent.getStringExtra("GAME_PRICE"),
+                    imageIds,
+                    intent.getStringExtra("GAME_CATEGORY"),
+                    intent.getStringExtra("GAME_DESCRIPTION"),
+                    intent.getFloatExtra("GAME_RATING", 0f),
+                    null // Giá trị mặc định cho systemRequirements
+            );
+        }
 
-            // Ánh xạ các view
+        if (currentGame != null && currentGame.getName() != null) {
+            setTitle(currentGame.getName());
+
+            LinearLayout bottomBar = findViewById(R.id.bottom_bar);
+            MaterialButton buttonDownloadOwned = findViewById(R.id.buttonDownloadOwned);
+
+            if (isOwned) {
+                bottomBar.setVisibility(View.GONE);
+                buttonDownloadOwned.setVisibility(View.VISIBLE);
+
+                if (DownloadManager.isGameDownloaded(this, currentGame)) {
+                    buttonDownloadOwned.setText("Chơi");
+                    buttonDownloadOwned.setIconResource(R.drawable.ic_play_arrow);
+                } else {
+                    buttonDownloadOwned.setText("Tải xuống");
+                    buttonDownloadOwned.setIconResource(R.drawable.ic_download);
+                }
+
+            } else {
+                bottomBar.setVisibility(View.VISIBLE);
+                buttonDownloadOwned.setVisibility(View.GONE);
+            }
+
+            buttonDownloadOwned.setOnClickListener(v -> {
+                if (DownloadManager.isGameDownloaded(this, currentGame)) {
+                    Toast.makeText(this, "Đang mở " + currentGame.getName() + "...", Toast.LENGTH_SHORT).show();
+                } else {
+                    DownloadManager.addDownloadedGame(this, currentGame);
+                    Toast.makeText(this, "Đã tải xong " + currentGame.getName(), Toast.LENGTH_SHORT).show();
+                    buttonDownloadOwned.setText("Chơi");
+                    buttonDownloadOwned.setIconResource(R.drawable.ic_play_arrow);
+                }
+            });
+
             imageViewCover = findViewById(R.id.imageViewCover);
             RecyclerView recyclerViewGameplay = findViewById(R.id.recyclerViewGameplay);
             TextView textViewGameplayTitle = findViewById(R.id.textViewGameplayTitle);
@@ -48,17 +99,26 @@ public class GameDetailActivity extends AppCompatActivity implements ImageSlider
             RatingBar ratingBarDetail = findViewById(R.id.ratingBarDetail);
             TextView textViewDescriptionDetail = findViewById(R.id.textViewDescriptionDetail);
             TextView textViewPriceDetail = findViewById(R.id.textViewPriceDetail);
-            Button buttonBuy = findViewById(R.id.buttonBuy);
+            Button buttonAddToCart = findViewById(R.id.buttonAddToCart);
+            Button buttonBuyNow = findViewById(R.id.buttonBuyNow);
 
-            // Xử lý hiển thị ảnh
-            if (imageIds != null && !imageIds.isEmpty()) {
-                imageViewCover.setImageResource(imageIds.get(0));
+            // --- PHẦN THÊM MỚI: ÁNH XẠ VIEW CẤU HÌNH ---
+            TextView textViewSysReqTitle = findViewById(R.id.textViewSysReqTitle);
+            TextView textViewSysReqDetail = findViewById(R.id.textViewSysReqDetail);
 
-                if (imageIds.size() > 1) {
+
+            textViewNameDetail.setText(currentGame.getName());
+            textViewCategoryDetail.setText(currentGame.getCategory());
+            ratingBarDetail.setRating(currentGame.getRating());
+            textViewDescriptionDetail.setText(currentGame.getDescription());
+            textViewPriceDetail.setText(currentGame.getPrice());
+
+            if (!currentGame.getImageResourceIds().isEmpty()) {
+                imageViewCover.setImageResource(currentGame.getImageResourceIds().get(0));
+                if (currentGame.getImageResourceIds().size() > 1) {
                     textViewGameplayTitle.setVisibility(View.VISIBLE);
                     recyclerViewGameplay.setVisibility(View.VISIBLE);
-
-                    List<Integer> gameplayImages = imageIds.subList(1, imageIds.size());
+                    List<Integer> gameplayImages = currentGame.getImageResourceIds().subList(1, currentGame.getImageResourceIds().size());
                     ImageSliderAdapter gameplayAdapter = new ImageSliderAdapter(gameplayImages, this);
                     recyclerViewGameplay.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
                     recyclerViewGameplay.setAdapter(gameplayAdapter);
@@ -68,25 +128,38 @@ public class GameDetailActivity extends AppCompatActivity implements ImageSlider
                 }
             }
 
-            // =================== PHẦN BỊ THIẾU ĐÃ ĐƯỢC KHÔI PHỤC ===================
-            // Điền dữ liệu vào các view
-            textViewNameDetail.setText(name);
-            textViewCategoryDetail.setText(category);
-            ratingBarDetail.setRating(rating);
-            textViewDescriptionDetail.setText(description);
-            textViewPriceDetail.setText(price);
-            // =====================================================================
+            // --- PHẦN THÊM MỚI: HIỂN THỊ DỮ LIỆU CẤU HÌNH ---
+            String sysReqs = currentGame.getSystemRequirements();
+            if (sysReqs != null && !sysReqs.isEmpty()) {
+                textViewSysReqTitle.setVisibility(View.VISIBLE);
+                textViewSysReqDetail.setVisibility(View.VISIBLE);
+                textViewSysReqDetail.setText(sysReqs);
+            } else {
+                textViewSysReqTitle.setVisibility(View.GONE);
+                textViewSysReqDetail.setVisibility(View.GONE);
+            }
 
-            // Xử lý sự kiện cho nút Mua
-            buttonBuy.setOnClickListener(v -> {
-                Toast.makeText(this, "Đã thêm " + name + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+
+            buttonAddToCart.setOnClickListener(v -> {
+                if (Cart.addItem(currentGame)) {
+                    Toast.makeText(this, "Đã thêm '" + currentGame.getName() + "' vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Sản phẩm đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            buttonBuyNow.setOnClickListener(v -> {
+                ArrayList<Game> itemToCheckout = new ArrayList<>();
+                itemToCheckout.add(currentGame);
+                Intent checkoutIntent = new Intent(this, CheckoutActivity.class);
+                checkoutIntent.putExtra("SELECTED_ITEMS", itemToCheckout);
+                startActivity(checkoutIntent);
             });
         }
     }
 
     @Override
     public void onImageClick(int imageResourceId) {
-        // Khi một thumbnail được nhấn, cập nhật ảnh bìa lớn
         imageViewCover.setImageResource(imageResourceId);
     }
 

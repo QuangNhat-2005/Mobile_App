@@ -15,9 +15,8 @@
         <ImageView
             android:id="@+id/imageViewGame"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher" />  <!-- Ảnh mặc định -->
+            android:layout_height="180dp"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,20 +28,31 @@
                 android:id="@+id/textViewGameName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tên Game"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:text="Game Name"/>
+
+            <!-- ===== THÊM RATINGBAR VÀO ĐÂY ===== -->
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="0.1" />
+            <!-- ===== KẾT THÚC PHẦN THÊM MỚI ===== -->
 
             <TextView
                 android:id="@+id/textViewGamePrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Giá Game"
+                android:layout_marginTop="8dp"
                 android:textSize="16sp"
-                android:textColor="@color/teal_700"/> <!-- Bạn có thể đổi màu này -->
+                android:textColor="@color/teal_700"
+                android:text="Price"/>
         </LinearLayout>
-
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

@@ -1,100 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center"
+    android:background="@drawable/gradient_background"
     tools:context=".LoginActivity">
-    <!-- Tăng padding chung -->
 
-    <!-- Bạn có thể thêm một ImageView ở đây cho logo nếu muốn -->
-    <!--
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/your_logo_here"
-        android:layout_marginBottom="24dp" />
-    -->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Đăng Nhập"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="?attr/colorPrimary"
-        android:layout_marginBottom="48dp"/>
-
-    <!-- Tăng kích thước chữ -->
-    <!-- Sử dụng màu chính của theme -->
-    <!-- Tăng khoảng cách dưới -->
-
-    <!-- Trường Tên đăng nhập/Email với TextInputLayout -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutUsername"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tên đăng nhập hoặc Email"
-        app:startIconDrawable="@drawable/ic_person"
-        android:layout_marginBottom="16dp">
-        <!-- Kiểu OutlinedBox -->
-        <!-- Icon bạn vừa tạo -->
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:padding="32dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextUsername"
+        <!-- 1. LOGO ỨNG DỤNG -->
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_launcher_foreground"
+            app:tint="@android:color/white" />
+
+        <!-- 2. SLOGAN -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="48dp"
+            android:text="Let the games begin!"
+            android:textColor="#B3FFFFFF"
+            android:textSize="18sp" />
+
+        <!-- 3. Ô NHẬP TÊN ĐĂNG NHẬP -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutUsername"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="Tên đăng nhập hoặc Email"
+            android:textColorHint="#80FFFFFF"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp">
 
-    <!-- Trường Mật khẩu với TextInputLayout -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutPassword"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Mật khẩu"
-        app:startIconDrawable="@drawable/ic_lock"
-        app:endIconMode="password_toggle"
-        android:layout_marginBottom="32dp">
-        <!-- Icon bạn vừa tạo -->
-        <!-- Thêm icon ẩn/hiện mật khẩu -->
-        <!-- Tăng khoảng cách dưới -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_bottom_line"
+                android:paddingBottom="16dp"
+                android:textColor="@android:color/white" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextPassword"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- 4. Ô NHẬP MẬT KHẨU -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="16dp"
+            android:hint="Mật khẩu"
+            android:textColorHint="#80FFFFFF"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="#80FFFFFF">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Đăng Nhập"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:textSize="16sp"
-        app:cornerRadius="8dp"/>
-    <!-- Tăng padding cho nút -->
-    <!-- Bo tròn góc nút -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_bottom_line"
+                android:inputType="textPassword"
+                android:paddingBottom="16dp"
+                android:textColor="@android:color/white" />
 
-    <TextView
-        android:id="@+id/textViewRegisterLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chưa có tài khoản? Đăng ký ngay!"
-        android:textColor="?attr/colorPrimary"
-        android:layout_marginTop="24dp"
-        android:padding="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-</LinearLayout>
+        <!-- 5. NÚT ĐĂNG NHẬP -->
+        <Button
+            android:id="@+id/buttonLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="#4DFFFFFF"
+            android:paddingVertical="14dp"
+            android:text="Đăng Nhập"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <!-- 6. LINK ĐĂNG KÝ -->
+        <TextView
+            android:id="@+id/textViewRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:text="Chưa có tài khoản? Đăng ký ngay!"
+            android:textColor="#80FFFFFF" />
+
+    </LinearLayout>
+
+</RelativeLayout>

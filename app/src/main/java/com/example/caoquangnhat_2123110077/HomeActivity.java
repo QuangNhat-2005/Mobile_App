@@ -1,157 +1,120 @@
+// File: app/src/main/java/com/example/caoquangnhat_2123110077/HomeActivity.java
 package com.example.caoquangnhat_2123110077;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
-public class HomeActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {
+public class HomeActivity extends AppCompatActivity {
 
-    Button buttonLogout;
-
-    // Khai báo cho Game
-    RecyclerView recyclerViewGames;
-    GameAdapter gameAdapter;
-    List<Game> gameList;
-
-    // Khai báo cho Danh mục
-    RecyclerView recyclerViewCategories;
-    CategoryAdapter categoryAdapter;
-    List<String> categoryList;
-
-    // Khai báo cho Tìm kiếm
-    SearchView searchView;
+    private RecyclerView recyclerViewGames;
+    private GameAdapter gameAdapter;
+    private List<Game> gameList;
+    private ChipGroup chipGroupCategories;
+    private EditText searchEditText;
     private String currentCategory = "Tất cả";
+    private Set<String> purchasedGameNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // --- Khởi tạo danh sách ---
-        gameList = new ArrayList<>();
-        categoryList = new ArrayList<>();
+        // Ánh xạ các view mới
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        AppBarLayout appBarLayout = findViewById(R.id.appbar);
+        searchEditText = findViewById(R.id.searchEditText);
+        ImageButton cartButton = findViewById(R.id.cartButton);
+        ImageButton libraryButton = findViewById(R.id.libraryButton);
+        ImageButton logoutButton = findViewById(R.id.logoutButton);
 
-        // --- Tạo dữ liệu mẫu ---
-        setupGameData();
-        setupCategoryData();
-
-        // --- Thiết lập RecyclerView cho Danh mục ---
-        recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
-        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        categoryAdapter = new CategoryAdapter(categoryList, this);
-        recyclerViewCategories.setAdapter(categoryAdapter);
-
-        // --- Thiết lập RecyclerView cho Game ---
-        recyclerViewGames = findViewById(R.id.recyclerViewGames);
-        recyclerViewGames.setLayoutManager(new LinearLayoutManager(this));
-
-        // =================== SỬA LỖI Ở ĐÂY ===================
-        // Khởi tạo adapter với danh sách game đầy đủ ngay từ đầu.
-        gameAdapter = new GameAdapter(this, gameList);
-        recyclerViewGames.setAdapter(gameAdapter);
-        // =====================================================
-
-        // --- Thiết lập cho SearchView ---
-        searchView = findViewById(R.id.searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterGames(newText, currentCategory);
-                return true;
-            }
+        // Xử lý hiệu ứng mờ dần của Toolbar khi cuộn
+        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+            // verticalOffset là 0 khi mở rộng hết cỡ, âm khi cuộn lên
+            // Tính toán độ trong suốt (alpha)
+            float alpha = (float) Math.abs(verticalOffset) / (float) appBarLayout1.getTotalScrollRange();
+            toolbar.setAlpha(alpha);
         });
 
-        // --- Xử lý nút Đăng xuất ---
-        buttonLogout = findViewById(R.id.buttonLogout);
-        buttonLogout.setOnClickListener(v -> {
-            Toast.makeText(HomeActivity.this, "Đã đăng xuất", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        setupGameData();
+        setupRecyclerView();
+
+        // Xử lý sự kiện cho các nút hành động
+        cartButton.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
+        libraryButton.setOnClickListener(v -> startActivity(new Intent(this, LibraryActivity.class)));
+        logoutButton.setOnClickListener(v -> {
+            Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         });
 
-        // Dòng filterGames("", "Tất cả"); ở cuối không cần thiết nữa vì adapter đã có dữ liệu.
-    }
+        // Xử lý sự kiện cho thanh tìm kiếm
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterGames(s.toString(), currentCategory);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
-    private void setupCategoryData() {
-        categoryList.add("Tất cả");
-        categoryList.add("Hành động");
-        categoryList.add("Chiến thuật");
-        categoryList.add("Nhập vai");
-    }
-
-    private void setupGameData() {
-        gameList.clear();
-        gameList.add(new Game("Elden Ring", "990.000đ",
-                Arrays.asList(R.drawable.elden_ring, R.drawable.the_witcher_3),
-                "Nhập vai",
-                "THE NEW FANTASY ACTION RPG. Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring and become an Elden Lord in the Lands Between.",
-                4.8f));
-        gameList.add(new Game("Baldur's Gate 3", "850.000đ",
-                Arrays.asList(R.drawable.baldurs_gate_3),
-                "Nhập vai",
-                "Gather your party, and return to the Forgotten Realms in a tale of fellowship and betrayal, sacrifice and survival, and the lure of absolute power.",
-                4.9f));
-        gameList.add(new Game("Cyberpunk 2077", "990.000đ",
-                Arrays.asList(R.drawable.cyberpunk_2077, R.drawable.cyberpunk_gp1, R.drawable.cyberpunk_gp2, R.drawable.cyberpunk_gp3, R.drawable.cyberpunk_gp4),
-                "Hành động",
-                "Cyberpunk 2077 is an open-world, action-adventure story set in Night City, a megalopolis obsessed with power, glamour and body modification. You play as V, a mercenary outlaw going after a one-of-a-kind implant that is the key to immortality.",
-                4.2f));
-        gameList.add(new Game("Stardew Valley", "165.000đ",
-                Arrays.asList(R.drawable.stardew_valley),
-                "Chiến thuật",
-                "You've inherited your grandfather's old farm plot in Stardew Valley. Armed with hand-me-down tools and a few coins, you set out to begin your new life. Can you learn to live off the land and turn these overgrown fields into a thriving home?",
-                4.9f));
-        gameList.add(new Game("The Witcher 3", "450.000đ",
-                Arrays.asList(R.drawable.the_witcher_3),
-                "Nhập vai",
-                "As war rages on throughout the Northern Realms, you take on the greatest contract of your life — tracking down the Child of Prophecy, a living weapon that can alter the shape of the world.",
-                4.8f));
-        gameList.add(new Game("DOOM Eternal", "750.000đ",
-                Arrays.asList(R.drawable.doom_eternal),
-                "Hành động",
-                "Hell’s armies have invaded Earth. Become the Slayer in an epic single-player campaign to conquer demons across dimensions and stop the final destruction of humanity.",
-                4.6f));
-        gameList.add(new Game("The Last of Us Part II", "1.250.000đ",
-                Arrays.asList(R.drawable.the_last_of_us_2),
-                "Hành động",
-                "Five years after their dangerous journey across the post-pandemic United States, Ellie and Joel have settled down in Jackson, Wyoming. Living amongst a thriving community of survivors has allowed them peace and stability, despite the constant threat of the infected and other, more desperate survivors.",
-                4.5f));
+        // Xử lý ChipGroup
+        chipGroupCategories = findViewById(R.id.chipGroupCategories);
+        // (Giữ nguyên logic ChipGroup của bạn ở đây)
     }
 
     @Override
-    public void onCategoryClick(String category) {
-        this.currentCategory = category;
-        String currentQuery = searchView.getQuery().toString();
-        filterGames(currentQuery, category);
+    protected void onResume() {
+        super.onResume();
+        loadPurchasedGames();
+        if (gameAdapter != null) {
+            gameAdapter.updateOwnedGames(purchasedGameNames);
+        }
+    }
+
+    private void setupRecyclerView() {
+        recyclerViewGames = findViewById(R.id.recyclerViewGames);
+        recyclerViewGames.setLayoutManager(new LinearLayoutManager(this));
+        gameAdapter = new GameAdapter(this, new ArrayList<>(gameList), purchasedGameNames);
+        recyclerViewGames.setAdapter(gameAdapter);
+    }
+
+    private void loadPurchasedGames() {
+        purchasedGameNames = LibraryManager.getPurchasedGameNames(this);
     }
 
     private void filterGames(String query, String category) {
         List<Game> filteredList = new ArrayList<>();
         for (Game game : gameList) {
             boolean categoryMatch = category.equals("Tất cả") || game.getCategory().equalsIgnoreCase(category);
-            boolean searchMatch = game.getName().toLowerCase().contains(query.toLowerCase());
+            boolean searchMatch = query == null || query.isEmpty() || game.getName().toLowerCase().contains(query.toLowerCase());
             if (categoryMatch && searchMatch) {
                 filteredList.add(game);
             }
         }
         gameAdapter.filterList(filteredList);
+    }
+
+    private void setupGameData() {
+        gameList = new ArrayList<>(GameRepository.getAllGames());
+        loadPurchasedGames();
     }
 }
