@@ -1,8 +1,8 @@
 // File: app/src/main/java/com/example/caoquangnhat_2123110077/RegisterActivity.java
+// ĐÃ ĐƯỢC CHỈNH SỬA
 package com.example.caoquangnhat_2123110077;
 
 import android.content.Intent;
-import android.content.SharedPreferences; // Thêm import
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -10,63 +10,63 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private TextInputEditText editTextUsername;
-    private TextInputEditText editTextPassword;
-    private TextInputEditText editTextConfirmPassword;
+    private TextInputEditText editTextEmail, editTextPassword, editTextConfirmPassword;
     private Button buttonRegister;
-    private TextView textViewLoginLink;
-
-    // --- PHẦN THÊM MỚI: ĐỊNH NGHĨA TÊN CHO SHAREDPREFERENCES ---
-    public static final String SHARED_PREFS = "sharedPrefs";
-    public static final String KEY_USERNAME = "username";
-    public static final String KEY_PASSWORD = "password";
-    // --- KẾT THÚC PHẦN THÊM MỚI ---
+    private TextView textViewLogin;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        mAuth = FirebaseAuth.getInstance();
+        editTextEmail = findViewById(R.id.etRegisterEmail);
+        editTextPassword = findViewById(R.id.etRegisterPassword);
+        editTextConfirmPassword = findViewById(R.id.etRegisterConfirmPassword);
+        buttonRegister = findViewById(R.id.btnRegister);
+        textViewLogin = findViewById(R.id.tvLoginLink);
+        textViewLogin.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
+        buttonRegister.setOnClickListener(v -> registerUser());
+    }
 
-        editTextUsername = findViewById(R.id.editTextUsername);
-        editTextPassword = findViewById(R.id.editTextPassword);
-        editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
-        buttonRegister = findViewById(R.id.buttonRegister);
-        textViewLoginLink = findViewById(R.id.textViewLoginLink);
+    private void registerUser() {
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        String confirmPassword = editTextConfirmPassword.getText().toString().trim();
 
-        buttonRegister.setOnClickListener(v -> {
-            String username = editTextUsername.getText().toString().trim();
-            String password = editTextPassword.getText().toString().trim();
-            String confirmPassword = editTextConfirmPassword.getText().toString().trim();
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (password.length() < 6) {
+            Toast.makeText(this, "Mật khẩu phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Mật khẩu xác nhận không khớp", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
-                Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (!password.equals(confirmPassword)) {
-                editTextConfirmPassword.setError("Mật khẩu xác nhận không khớp");
-                editTextConfirmPassword.requestFocus();
-                return;
-            }
-
-            // --- PHẦN SỬA ĐỔI: LƯU TÀI KHOẢN VÀO SHAREDPREFERENCES ---
-            SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            editor.putString(KEY_USERNAME, username);
-            editor.putString(KEY_PASSWORD, password);
-            editor.apply(); // Lưu lại
-
-            Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-            finish();
-            // --- KẾT THÚC PHẦN SỬA ĐỔI ---
-        });
-
-        textViewLoginLink.setOnClickListener(v -> {
-            finish();
-        });
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            // === BẮT ĐẦU THAY ĐỔI: Tạo ví bằng SharedPreferences ===
+                            WalletManager.createWalletForNewUser(this, user.getUid());
+                            Toast.makeText(RegisterActivity.this, "Đăng ký thành công! Bạn được tặng 500,000đ", Toast.LENGTH_LONG).show();
+                            // === KẾT THÚC THAY ĐỔI ===
+                        }
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }

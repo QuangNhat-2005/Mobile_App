@@ -1,68 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="8dp">
+    android:padding="12dp"
+    android:background="@android:color/white">
 
-    <LinearLayout
-        android:id="@+id/layout_item_cart"
-        android:layout_width="match_parent"
+    <!-- CheckBox để chọn/bỏ chọn -->
+    <CheckBox
+        android:id="@+id/checkbox_select"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="center_vertical"
-        android:background="?attr/selectableItemBackground">
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:checked="true"/>
 
-        <!-- CHECKBOX ĐÃ ĐƯỢC THÊM VÀO ĐÂY -->
-        <CheckBox
-            android:id="@+id/checkBoxItem"
+    <!-- ImageView để hiển thị ảnh game -->
+    <ImageView
+        android:id="@+id/cart_item_image"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_toEndOf="@id/checkbox_select"
+        android:layout_marginStart="12dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_background" /> <!-- Ảnh tạm thời -->
+
+    <!-- Layout chứa Tên và Giá -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toEndOf="@id/cart_item_image"
+        android:layout_toStartOf="@id/button_delete"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/textview_game_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"/>
+            android:text="Game Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
 
-        <ImageView
-            android:id="@+id/imageViewGameCart"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"/>
-
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textview_game_price"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="12dp">
-
-            <TextView
-                android:id="@+id/textViewGameNameCart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tên Game"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"/>
-
-            <TextView
-                android:id="@+id/textViewGamePriceCart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Giá Game"
-                android:textSize="14sp"
-                android:textColor="@color/teal_700"
-                android:layout_marginTop="4dp"/>
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imageViewRemoveItem"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_delete"
-            android:padding="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@android:color/darker_gray" />
+            android:text="150,000đ"
+            android:textSize="14sp"
+            android:textColor="@color/purple_500" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+    <!-- Nút xóa -->
+    <ImageButton
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        app:tint="@android:color/darker_gray"
+        xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+</RelativeLayout>

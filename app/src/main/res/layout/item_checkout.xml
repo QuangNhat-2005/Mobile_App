@@ -3,23 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingVertical="4dp">
+    android:padding="8dp"
+    android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/textViewItemName"
+    <ImageView
+        android:id="@+id/checkout_item_image"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_background" />
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Tên Game"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/checkout_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Name"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/textViewItemPrice"
+        android:id="@+id/checkout_item_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Giá"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="16sp" />
+        android:text="Price"
+        android:textColor="@android:color/black"
+        android:textSize="15sp" />
 
 </LinearLayout>

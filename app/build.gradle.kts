@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -36,6 +37,20 @@ android {
 
 dependencies {
 
+    // === BẮT ĐẦU PHẦN CẦN SỬA LẠI ===
+
+    // 1. Thêm lại Firebase BOM (Bill of Materials)
+    // Nó sẽ quản lý phiên bản của tất cả các thư viện Firebase.
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+
+    // 2. Khai báo thư viện Firebase Authentication (KHÔNG cần ghi phiên bản)
+    // Chúng ta CHỈ cần thư viện này, không cần firestore.
+    implementation("com.google.firebase:firebase-auth")
+
+    // === KẾT THÚC PHẦN CẦN SỬA LẠI ===
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    // Các thư viện khác của bạn giữ nguyên
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -43,4 +58,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation(libs.glide)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 }

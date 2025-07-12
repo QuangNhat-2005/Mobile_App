@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F6F9"
+    tools:context=".AccountActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_account"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="Tài khoản của tôi" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:layout_margin="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- === BẮT ĐẦU THAY ĐỔI: Sử dụng CircleImageView === -->
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/image_account_avatar"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_account"
+                            app:civ_border_width="2dp"
+                            app:civ_border_color="?attr/colorPrimary"/>
+                        <!-- === KẾT THÚC THAY ĐỔI === -->
+
+                        <TextView
+                            android:id="@+id/text_account_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            tools:text="user.email@example.com"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E0E0E0"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Số dư Wallet"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"/>
+                        <TextView
+                            android:id="@+id/text_account_balance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="550.000 đ"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/purple_500"/>
+                    </RelativeLayout>
+                    <Button
+                        android:id="@+id/button_add_funds"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="8dp"
+                        android:text="Nạp tiền"
+                        android:textColor="?attr/colorPrimary" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Các CardView khác giữ nguyên -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:layout_margin="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Quản lý Game"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/purple_500"
+                        android:paddingHorizontal="16dp"
+                        android:paddingTop="8dp"/>
+                    <RelativeLayout android:id="@+id/layout_library" style="@style/AccountMenuItemLayout">
+                        <ImageView style="@style/AccountMenuIcon" android:src="@drawable/ic_library"/>
+                        <TextView style="@style/AccountMenuText" android:text="Thư viện Game" />
+                        <ImageView style="@style/AccountMenuChevron"/>
+                    </RelativeLayout>
+                    <RelativeLayout android:id="@+id/layout_transaction_history" style="@style/AccountMenuItemLayout">
+                        <ImageView style="@style/AccountMenuIcon" android:src="@drawable/ic_history"/>
+                        <TextView style="@style/AccountMenuText" android:text="Lịch sử giao dịch" />
+                        <ImageView style="@style/AccountMenuChevron"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:layout_margin="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cài đặt Tài khoản"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/purple_500"
+                        android:paddingHorizontal="16dp"
+                        android:paddingTop="8dp"/>
+                    <RelativeLayout android:id="@+id/layout_change_password" style="@style/AccountMenuItemLayout">
+                        <ImageView style="@style/AccountMenuIcon" android:src="@drawable/ic_lock"/>
+                        <TextView style="@style/AccountMenuText" android:text="Đổi mật khẩu" />
+                        <ImageView style="@style/AccountMenuChevron"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <Button
+                android:id="@+id/button_account_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="Đăng xuất"
+                android:backgroundTint="@color/design_default_color_error"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

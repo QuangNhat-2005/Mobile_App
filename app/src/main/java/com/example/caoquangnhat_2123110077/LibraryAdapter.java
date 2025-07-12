@@ -1,8 +1,9 @@
 // File: app/src/main/java/com/example/caoquangnhat_2123110077/LibraryAdapter.java
+// ĐÃ ĐƯỢC CHỈNH SỬA
 package com.example.caoquangnhat_2123110077;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.Intent; // Thêm import này
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.button.MaterialButton; // Sử dụng MaterialButton để có icon
+import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryViewHolder> {
 
-    private final List<Game> libraryGames;
     private final Context context;
+    private final List<Game> libraryGames;
 
     public LibraryAdapter(Context context, List<Game> libraryGames) {
         this.context = context;
@@ -36,46 +37,47 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
         Game game = libraryGames.get(position);
         holder.gameName.setText(game.getName());
-        if (game.getImageResourceIds() != null && !game.getImageResourceIds().isEmpty()) {
-            holder.gameImage.setImageResource(game.getImageResourceIds().get(0));
-        }
 
-        // --- BẮT ĐẦU PHẦN SỬA ĐỔI QUAN TRỌNG ---
+        Glide.with(context)
+                .load(game.getImageUrl())
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(holder.gameImage);
 
-        // 1. Kiểm tra trạng thái tải xuống và cập nhật giao diện ban đầu
-        if (DownloadManager.isGameDownloaded(context, game)) {
-            holder.downloadButton.setText("Chơi");
-            holder.downloadButton.setIconResource(R.drawable.ic_play_arrow); // Icon "Play"
+        // Kiểm tra trạng thái tải về và cập nhật nút
+        if (DownloadManager.isGameDownloaded(context, game.getName())) {
+            holder.actionButton.setText("Chơi");
         } else {
-            holder.downloadButton.setText("Tải xuống");
-            holder.downloadButton.setIconResource(R.drawable.ic_download); // Icon "Download"
+            holder.actionButton.setText("Tải xuống");
         }
 
-        // 2. Cập nhật logic khi nhấn nút
-        holder.downloadButton.setOnClickListener(v -> {
-            // Kiểm tra lại trạng thái ngay tại thời điểm nhấn nút
-            if (DownloadManager.isGameDownloaded(context, game)) {
-                // Nếu đã tải -> Hành động "Chơi"
-                Toast.makeText(context, "Đang mở " + game.getName() + "...", Toast.LENGTH_SHORT).show();
+        holder.actionButton.setOnClickListener(v -> {
+            if (DownloadManager.isGameDownloaded(context, game.getName())) {
+                Toast.makeText(context, "Đang mở " + game.getName(), Toast.LENGTH_SHORT).show();
             } else {
-                // Nếu chưa tải -> Hành động "Tải xuống"
-                DownloadManager.addDownloadedGame(context, game); // Lưu trạng thái đã tải
-                Toast.makeText(context, "Đã tải xong " + game.getName(), Toast.LENGTH_SHORT).show();
-
-                // Cập nhật lại giao diện của nút ngay lập tức
-                holder.downloadButton.setText("Chơi");
-                holder.downloadButton.setIconResource(R.drawable.ic_play_arrow);
+                Toast.makeText(context, "Bắt đầu tải " + game.getName(), Toast.LENGTH_SHORT).show();
+                DownloadManager.setGameDownloaded(context, game.getName(), true);
+                holder.actionButton.setText("Chơi"); // Cập nhật nút ngay lập tức
             }
         });
 
-        // --- KẾT THÚC PHẦN SỬA ĐỔI ---
-
+        // === BẮT ĐẦU THAY ĐỔI ===
+        // Thêm sự kiện click cho toàn bộ item view
         holder.itemView.setOnClickListener(v -> {
+            // Tạo Intent để mở GameDetailActivity
             Intent intent = new Intent(context, GameDetailActivity.class);
+
+            // Đính kèm đối tượng game vào Intent.
+            // Sử dụng key "GAME_OBJECT" vì GameDetailActivity của bạn đang dùng key này.
             intent.putExtra("GAME_OBJECT", game);
+
+            // Vì đây là thư viện, game chắc chắn đã được sở hữu.
+            // Gửi cờ IS_OWNED = true để GameDetailActivity biết và hiển thị đúng các nút.
             intent.putExtra("IS_OWNED", true);
+
+            // Khởi chạy Activity
             context.startActivity(intent);
         });
+        // === KẾT THÚC THAY ĐỔI ===
     }
 
     @Override
@@ -83,17 +85,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         return libraryGames.size();
     }
 
-    // --- SỬA ĐỔI: Đảm bảo ViewHolder sử dụng MaterialButton ---
-    static class LibraryViewHolder extends RecyclerView.ViewHolder {
+    public static class LibraryViewHolder extends RecyclerView.ViewHolder {
         ImageView gameImage;
-        TextView gameName;
-        MaterialButton downloadButton; // Đổi kiểu từ Button sang MaterialButton
+        TextView gameName, gameStatus;
+        Button actionButton;
 
         public LibraryViewHolder(@NonNull View itemView) {
             super(itemView);
-            gameImage = itemView.findViewById(R.id.imageViewLibraryGame);
-            gameName = itemView.findViewById(R.id.textViewLibraryGameName);
-            downloadButton = itemView.findViewById(R.id.buttonDownload); // ID của nút trong item_library_game.xml
+            gameImage = itemView.findViewById(R.id.library_game_image);
+            gameName = itemView.findViewById(R.id.library_game_name);
+            gameStatus = itemView.findViewById(R.id.library_game_status);
+            actionButton = itemView.findViewById(R.id.library_action_button);
         }
     }
 }

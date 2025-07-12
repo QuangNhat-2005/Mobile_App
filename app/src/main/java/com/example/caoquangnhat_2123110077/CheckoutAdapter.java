@@ -1,11 +1,14 @@
+// File: app/src/main/java/com/example/caoquangnhat_2123110077/CheckoutAdapter.java
 package com.example.caoquangnhat_2123110077;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder> {
@@ -26,8 +29,15 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
     @Override
     public void onBindViewHolder(@NonNull CheckoutViewHolder holder, int position) {
         Game game = checkoutItems.get(position);
-        holder.itemName.setText(game.getName());
-        holder.itemPrice.setText(game.getPrice());
+        holder.gameName.setText(game.getName());
+        holder.gamePrice.setText(game.getPrice());
+
+        // Dùng Glide để tải ảnh game
+        Glide.with(holder.itemView.getContext())
+                .load(game.getImageUrl())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(holder.gameImage);
     }
 
     @Override
@@ -35,14 +45,16 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
         return checkoutItems.size();
     }
 
-    static class CheckoutViewHolder extends RecyclerView.ViewHolder {
-        TextView itemName;
-        TextView itemPrice;
+    public static class CheckoutViewHolder extends RecyclerView.ViewHolder {
+        ImageView gameImage;
+        TextView gameName;
+        TextView gamePrice;
 
         public CheckoutViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.textViewItemName);
-            itemPrice = itemView.findViewById(R.id.textViewItemPrice);
+            gameImage = itemView.findViewById(R.id.checkout_item_image);
+            gameName = itemView.findViewById(R.id.checkout_item_name);
+            gamePrice = itemView.findViewById(R.id.checkout_item_price);
         }
     }
 }

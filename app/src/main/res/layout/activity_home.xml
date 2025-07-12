@@ -1,148 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
+    android:background="#F0F2F5"
     tools:context=".HomeActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
+    <!-- PHẦN 1: HEADER CỐ ĐỊNH -->
+    <LinearLayout
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:orientation="vertical"
+        android:background="@color/purple_700"
+        android:padding="8dp"
+        android:elevation="4dp">
 
-        <!-- CollapsingToolbarLayout để chứa các view có thể co giãn -->
-        <com.google.android.material.appbar.CollapsingToolbarLayout
+        <!-- Dòng 1: Tiêu đề và các nút chức năng -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorPrimary"
-            app:statusBarScrim="?attr/colorPrimaryVariant">
+            android:layout_marginBottom="8dp">
 
-            <!-- Toolbar sẽ được pin lại ở trên cùng khi cuộn -->
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
-            <!-- Bố cục chứa các thành phần sẽ cuộn đi -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.7">
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
 
-                <!-- Tiêu đề lớn ở trên cùng -->
-                <TextView
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true">
+
+                <ImageButton
+                    android:id="@+id/cartButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cửa Hàng Game"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="16dp"/>
+                    android:src="@drawable/ic_cart"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Giỏ hàng"/>
 
-                <!-- Thanh tìm kiếm và các nút hành động -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageButton
+                    android:id="@+id/libraryButton"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingBottom="16dp"
-                    android:gravity="center_vertical">
+                    android:src="@drawable/ic_library"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Thư viện"/>
 
-                    <!-- Thanh tìm kiếm bo tròn -->
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="12dp"
-                            android:background="@color/white">
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_search"
-                                app:tint="?android:attr/textColorHint"/>
-                            <EditText
-                                android:id="@+id/searchEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="48dp"
-                                android:hint="Tìm kiếm game..."
-                                android:background="@null"
-                                android:imeOptions="actionSearch"
-                                android:inputType="text"
-                                android:maxLines="1"
-                                android:paddingHorizontal="8dp"
-                                android:textColor="@android:color/black"
-                                android:textColorHint="?android:attr/textColorHint"/>
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                <ImageButton
+                    android:id="@+id/accountButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_account"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Tài khoản"/>
 
-                    <!-- Các nút hành động -->
-                    <ImageButton
-                        android:id="@+id/cartButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_shopping_cart"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:layout_marginStart="8dp"
-                        app:tint="@android:color/white"/>
-                    <ImageButton
-                        android:id="@+id/libraryButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_library"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        app:tint="@android:color/white"/>
-                    <ImageButton
-                        android:id="@+id/logoutButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_logout"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        app:tint="@android:color/white"/>
-                </LinearLayout>
+                <!-- === ĐÃ XÓA NÚT ĐĂNG XUẤT KHỎI ĐÂY === -->
 
             </LinearLayout>
+        </RelativeLayout>
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+        <!-- Dòng 2: Thanh tìm kiếm -->
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/search_bar_background"
+            android:hint="Tìm kiếm game..."
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:drawablePadding="8dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="#888888"
+            android:drawableStart="@drawable/ic_search"
+            android:importantForAutofill="no" />
 
-        <!-- Dải Chip lọc thể loại -->
+    </LinearLayout>
+
+    <!-- PHẦN 2: BỘ LỌC THỂ LOẠI (CÓ THỂ CUỘN NGANG) -->
+    <HorizontalScrollView
+        android:id="@+id/genre_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        android:scrollbars="none"
+        android:background="@android:color/white"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupCategories"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:background="?android:attr/colorBackground"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             app:singleLine="true"
             app:singleSelection="true">
-            <!-- Các Chip sẽ được thêm từ code hoặc XML -->
+            <!-- Các Chip sẽ được thêm vào đây bằng code Java -->
         </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
 
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Danh sách game -->
+    <!-- PHẦN 3: DANH SÁCH GAME (CÓ THỂ CUỘN DỌC) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewGames"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingTop="8dp"
-        android:clipToPadding="false"/>
+        android:layout_below="@id/genre_scroll_view"
+        android:padding="4dp"
+        tools:listitem="@layout/item_game" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

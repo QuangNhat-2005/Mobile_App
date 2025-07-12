@@ -1,58 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
-    android:layout_marginVertical="8dp"
+    android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
 
-        <!-- Ảnh bìa của game -->
         <ImageView
-            android:id="@+id/imageViewLibraryGame"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:id="@+id/library_game_image"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
             android:scaleType="centerCrop"
-            tools:src="@drawable/cyberpunk_2077" />
+            android:src="@drawable/ic_launcher_background"/>
 
-        <!-- Phần thông tin bên dưới -->
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="12dp">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
 
             <TextView
-                android:id="@+id/textViewLibraryGameName"
+                android:id="@+id/library_game_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/buttonDownload"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@android:color/black"
+                android:text="Game Name"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                tools:text="Cyberpunk 2077" />
+                android:textColor="@android:color/black"/>
 
-            <!-- === THAY ĐỔI DUY NHẤT NẰM Ở ĐÂY === -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonDownload"
-                style="?attr/materialButtonOutlinedStyle"
+            <TextView
+                android:id="@+id/library_game_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="Tải xuống"
-                app:icon="@drawable/ic_download" />
+                android:text="Đã mua"
+                android:textSize="14sp"/>
+        </LinearLayout>
 
-        </RelativeLayout>
+        <Button
+            android:id="@+id/library_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tải xuống"/>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
